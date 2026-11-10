@@ -1,0 +1,557 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Пауза — семейный щит</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700;800&family=PT+Mono&display=swap">
+<style>
+/* Layout: одна колонка шириной с «листовку на холодильнике», крупные кнопки-плитки, один экран — одно действие */
+:root {
+  --paper: #f6f8f4;
+  --card: #ffffff;
+  --ink: #142019;
+  --ink-soft: #46544b;
+  --line: #cfd8cf;
+  --calm: #1f6b57;      /* спокойный зелёный — «безопасно» */
+  --calm-tint: #e2efe9;
+  --stop: #c62a1f;      /* сигнальный красный — «стоп» */
+  --stop-tint: #fbe6e3;
+  --amber: #8a5a00;
+  --amber-tint: #fdf1d6;
+  --focus: #0b57d0;
+  --on-calm: #ffffff;
+  --on-stop: #ffffff;
+  --display: "Golos Text", "PT Sans", "Segoe UI", Arial, sans-serif;
+  --body: "Golos Text", "PT Sans", "Segoe UI", Arial, sans-serif;
+  --mono: "PT Mono", "Courier New", monospace;
+  --base: 20px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #101613; --card: #18211c; --ink: #eef3ef; --ink-soft: #b5c2b9; --line: #2f3b34;
+    --calm: #5fc3a5; --calm-tint: #193229; --stop: #ff7a6b; --stop-tint: #3a1d19;
+    --amber: #f2c167; --amber-tint: #3a2e14; --focus: #8ab4ff; --on-calm: #0f1a15; --on-stop: #1a0d0b; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #101613; --card: #18211c; --ink: #eef3ef; --ink-soft: #b5c2b9; --line: #2f3b34;
+  --calm: #5fc3a5; --calm-tint: #193229; --stop: #ff7a6b; --stop-tint: #3a1d19;
+  --amber: #f2c167; --amber-tint: #3a2e14; --focus: #8ab4ff; --on-calm: #0f1a15; --on-stop: #1a0d0b; color-scheme: dark;
+}
+:root.size-2 { --base: 23px; }
+:root.size-3 { --base: 26px; }
+
+* { box-sizing: border-box; }
+body {
+  background: var(--paper); color: var(--ink);
+  font-family: var(--body); font-size: var(--base); line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 48px;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--paper); }
+.wrap { max-width: 760px; margin: 0 auto; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.2; text-wrap: balance; margin: 0; }
+h1 { font-size: 1.9em; font-weight: 800; letter-spacing: -0.01em; }
+h2 { font-size: 1.45em; font-weight: 800; }
+h3 { font-size: 1.1em; font-weight: 700; }
+p { margin: 0; }
+a { color: var(--calm); }
+button, input { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+
+/* верхняя панель */
+.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: var(--paper); border-bottom: 1px solid var(--line);
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding-block: 12px;
+}
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); margin-right: auto; }
+.brand-mark {
+  width: 44px; height: 44px; border-radius: 50%; background: var(--calm);
+  display: grid; place-items: center; flex: none;
+}
+.brand-mark span { display: block; width: 6px; height: 18px; background: var(--on-calm); border-radius: 2px; margin: 0 3px; }
+.brand-mark i { display: flex; }
+.brand b { font-family: var(--display); font-size: 1.15em; font-weight: 800; }
+.brand small { display: block; font-size: 0.6em; color: var(--ink-soft); line-height: 1.2; }
+.tool {
+  min-height: 48px; padding: 6px 14px; border-radius: 12px; border: 2px solid var(--line);
+  background: var(--card); cursor: pointer; font-size: 0.8em; font-weight: 600;
+}
+.tool[aria-pressed="true"] { border-color: var(--calm); color: var(--calm); }
+
+main { display: grid; gap: 22px; padding-top: 22px; }
+.lead { color: var(--ink-soft); font-size: 1em; max-width: 60ch; }
+
+/* главный экран */
+.sos {
+  display: grid; gap: 6px; text-align: left; width: 100%;
+  background: var(--stop); color: var(--on-stop); border: none; border-radius: 22px;
+  padding: 22px 24px; cursor: pointer; box-shadow: 0 6px 0 #8f1d15;
+}
+.sos:active { transform: translateY(3px); box-shadow: 0 3px 0 #8f1d15; }
+.sos strong { font-family: var(--display); font-size: 1.5em; font-weight: 800; line-height: 1.15; }
+.sos span { font-size: 0.9em; opacity: 0.95; }
+.tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 560px) { .tiles { grid-template-columns: 1fr; } }
+.tile {
+  display: grid; gap: 6px; align-content: start; text-align: left;
+  background: var(--card); border: 2px solid var(--line); border-radius: 18px;
+  padding: 18px 20px; cursor: pointer; min-height: 132px;
+}
+.tile:hover { border-color: var(--calm); }
+.tile b { font-family: var(--display); font-size: 1.1em; font-weight: 700; }
+.tile span { color: var(--ink-soft); font-size: 0.85em; }
+.tile .tag { justify-self: start; font-size: 0.7em; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--calm); background: var(--calm-tint); padding: 2px 10px; border-radius: 99px; }
+
+.rule-strip { display: grid; gap: 10px; background: var(--calm-tint); border-radius: 18px; padding: 18px 20px; }
+.rule-strip ol { margin: 0; padding-left: 1.3em; display: grid; gap: 6px; }
+
+/* общие элементы экранов */
+.back { justify-self: start; background: none; border: none; color: var(--calm); font-weight: 700; cursor: pointer; padding: 8px 0; min-height: 48px; }
+.panel { background: var(--card); border: 2px solid var(--line); border-radius: 20px; padding: 22px; display: grid; gap: 16px; }
+.big-btn {
+  min-height: 64px; border-radius: 16px; border: 2px solid var(--calm); background: var(--calm); color: var(--on-calm);
+  font-weight: 700; padding: 12px 20px; cursor: pointer; text-align: center;
+}
+.big-btn.ghost { background: var(--card); color: var(--calm); }
+.row { display: flex; gap: 12px; flex-wrap: wrap; }
+.row > * { flex: 1 1 200px; }
+
+/* SOS-помощник */
+.q { display: grid; gap: 12px; }
+.q-text { font-size: 1.25em; font-weight: 700; font-family: var(--display); }
+.yn { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.yn button { min-height: 72px; border-radius: 16px; font-weight: 800; font-size: 1.1em; cursor: pointer; border: 3px solid var(--line); background: var(--card); }
+.yn .yes { border-color: var(--stop); color: var(--stop); }
+.yn .no { border-color: var(--calm); color: var(--calm); }
+.progress { display: flex; gap: 6px; }
+.progress i { flex: 1; height: 8px; border-radius: 4px; background: var(--line); }
+.progress i.on { background: var(--calm); }
+.verdict { border-radius: 20px; padding: 22px; display: grid; gap: 12px; }
+.verdict.stop { background: var(--stop-tint); border: 3px solid var(--stop); }
+.verdict.calm { background: var(--calm-tint); border: 3px solid var(--calm); }
+.verdict h2 { color: var(--stop); }
+.verdict.calm h2 { color: var(--calm); }
+.steps { margin: 0; padding-left: 1.3em; display: grid; gap: 8px; }
+.phone-box { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--card); border: 2px dashed var(--line); border-radius: 14px; padding: 12px 16px; }
+.phone-box .num { font-family: var(--mono); font-size: 1.3em; font-weight: 700; user-select: all; }
+
+/* тренажёр */
+.scn-list { display: grid; gap: 12px; }
+.scn {
+  display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center; text-align: left;
+  background: var(--card); border: 2px solid var(--line); border-radius: 16px; padding: 14px 18px; cursor: pointer; min-height: 72px;
+}
+.scn .ch { font-size: 0.68em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); }
+.scn .badge { font-size: 0.7em; font-weight: 700; padding: 4px 10px; border-radius: 99px; background: var(--line); color: var(--ink); white-space: nowrap; }
+.scn .badge.ok { background: var(--calm-tint); color: var(--calm); }
+.scn .badge.bad { background: var(--amber-tint); color: var(--amber); }
+.scn .ico { width: 44px; height: 44px; border-radius: 12px; background: var(--calm-tint); display: grid; place-items: center; }
+.scn .ico svg { width: 26px; height: 26px; }
+
+.phone {
+  background: var(--ink); color: var(--paper); border-radius: 28px; padding: 18px; display: grid; gap: 12px;
+}
+.phone-top { display: flex; justify-content: space-between; align-items: center; font-size: 0.75em; opacity: 0.85; gap: 10px; flex-wrap: wrap; }
+.caller { font-family: var(--display); font-weight: 700; font-size: 1.05em; }
+.bubble { background: var(--card); color: var(--ink); border-radius: 18px 18px 18px 6px; padding: 12px 16px; max-width: 92%; }
+.choices { display: grid; gap: 12px; }
+.choice {
+  text-align: left; min-height: 64px; border-radius: 16px; border: 2px solid var(--line); background: var(--card);
+  padding: 12px 16px; cursor: pointer; display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start;
+}
+.choice .letter { font-family: var(--display); font-weight: 800; color: var(--calm); }
+.choice.right { border-color: var(--calm); background: var(--calm-tint); }
+.choice.wrong { border-color: var(--stop); background: var(--stop-tint); }
+.feedback { border-radius: 18px; padding: 18px 20px; display: grid; gap: 10px; }
+.feedback.ok { background: var(--calm-tint); }
+.feedback.bad { background: var(--amber-tint); }
+.flags { display: flex; gap: 8px; flex-wrap: wrap; }
+.flag { font-size: 0.75em; font-weight: 700; padding: 4px 12px; border-radius: 99px; background: var(--card); border: 2px solid var(--stop); color: var(--stop); }
+.score { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.score b { font-family: var(--display); font-size: 2.4em; font-weight: 800; color: var(--calm); font-variant-numeric: tabular-nums; }
+
+/* семейный план */
+.field { display: grid; gap: 6px; }
+.field label { font-weight: 700; }
+.field small { color: var(--ink-soft); font-size: 0.75em; }
+.field input { min-height: 56px; border: 2px solid var(--line); border-radius: 12px; padding: 8px 14px; background: var(--paper); width: 100%; }
+.codegen { display: flex; gap: 10px; flex-wrap: wrap; }
+.codegen input { flex: 1 1 220px; }
+.checks { display: grid; gap: 10px; }
+.check { display: grid; grid-template-columns: 32px 1fr; gap: 12px; align-items: start; background: var(--paper); border-radius: 12px; padding: 12px; }
+.check input { width: 28px; height: 28px; accent-color: var(--calm); margin: 2px 0 0; }
+.check small { display: block; color: var(--ink-soft); font-size: 0.75em; }
+.fridge {
+  background: var(--card); border: 3px solid var(--ink); border-radius: 6px; padding: 20px 22px; display: grid; gap: 12px;
+  box-shadow: 8px 8px 0 var(--calm);
+}
+.fridge h3 { font-size: 1.3em; }
+.fridge dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 14px; }
+.fridge dt { color: var(--ink-soft); }
+.fridge dd { margin: 0; font-weight: 700; font-family: var(--mono); overflow-wrap: anywhere; }
+.fridge .stopline { border-top: 2px solid var(--ink); padding-top: 10px; font-weight: 700; }
+.note { font-size: 0.75em; color: var(--ink-soft); }
+
+/* памятка */
+.rules { display: grid; gap: 12px; counter-reset: r; }
+.rule { display: grid; grid-template-columns: 52px 1fr; gap: 14px; align-items: start; background: var(--card); border: 2px solid var(--line); border-radius: 16px; padding: 14px 16px; }
+.rule::before { counter-increment: r; content: counter(r); font-family: var(--display); font-weight: 800; font-size: 1.4em; color: var(--on-calm); background: var(--calm); border-radius: 50%; width: 46px; height: 46px; display: grid; place-items: center; }
+.rule b { display: block; }
+.rule span { color: var(--ink-soft); font-size: 0.9em; }
+.alarm { background: var(--stop-tint); border: 3px solid var(--stop); border-radius: 20px; padding: 20px; display: grid; gap: 12px; }
+.alarm h2 { color: var(--stop); }
+footer { color: var(--ink-soft); font-size: 0.7em; border-top: 1px solid var(--line); padding-top: 14px; display: grid; gap: 6px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="bar">
+    <a class="brand" href="#home" aria-label="Пауза — на главную">
+      <span class="brand-mark" aria-hidden="true"><i><span></span><span></span></i></span>
+      <span><b>Пауза</b><small>семейный щит от мошенников</small></span>
+    </a>
+    <button class="tool" id="sizeBtn" type="button" aria-label="Изменить размер текста">Аа крупнее</button>
+    <button class="tool" id="speakBtn" type="button" aria-pressed="false">Слушать</button>
+  </header>
+  <main id="app" aria-live="polite"></main>
+  <footer class="wrap">
+    <p>Прототип социального продукта «Пауза». Тренажёр не собирает и не передаёт личные данные: всё, что вы вводите в семейный план, остаётся только на этом устройстве.</p>
+    <p>Если вам уже позвонили и вы перевели деньги — сразу звоните в свой банк по номеру на обороте карты, затем в полицию: 102 с мобильного или 112.</p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var app = document.getElementById("app");
+  var store = {
+    get: function (k, d) { try { var v = localStorage.getItem("pauza-" + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+    set: function (k, v) { try { localStorage.setItem("pauza-" + k, JSON.stringify(v)); } catch (e) {} }
+  };
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  /* ---------- размер шрифта ---------- */
+  var size = store.get("size", 1);
+  function applySize() {
+    document.documentElement.classList.remove("size-2", "size-3");
+    if (size > 1) document.documentElement.classList.add("size-" + size);
+    document.getElementById("sizeBtn").textContent = size === 3 ? "Аа обычный" : "Аа крупнее";
+  }
+  document.getElementById("sizeBtn").addEventListener("click", function () { size = size >= 3 ? 1 : size + 1; store.set("size", size); applySize(); });
+  applySize();
+
+  /* ---------- озвучивание ---------- */
+  var speakBtn = document.getElementById("speakBtn");
+  var canSpeak = "speechSynthesis" in window;
+  if (!canSpeak) speakBtn.hidden = true;
+  function stopSpeak() { if (canSpeak) { speechSynthesis.cancel(); } speakBtn.setAttribute("aria-pressed", "false"); speakBtn.textContent = "Слушать"; }
+  speakBtn.addEventListener("click", function () {
+    if (!canSpeak) return;
+    if (speakBtn.getAttribute("aria-pressed") === "true") { stopSpeak(); return; }
+    var text = Array.prototype.map.call(app.querySelectorAll("[data-say]"), function (n) { return n.innerText; }).join(". ");
+    if (!text) text = app.innerText;
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = "ru-RU"; u.rate = 0.9;
+    u.onend = stopSpeak;
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
+    speakBtn.setAttribute("aria-pressed", "true"); speakBtn.textContent = "Остановить";
+  });
+
+  /* ---------- данные тренажёра ---------- */
+  var ICON = {
+    call: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="color:var(--calm)"><path d="M5 3h4l2 5-3 2a12 12 0 0 0 6 6l2-3 5 2v4a2 2 0 0 1-2 2A18 18 0 0 1 3 5a2 2 0 0 1 2-2z"/></svg>',
+    msg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="color:var(--calm)"><path d="M4 5h16v11H8l-4 4z"/></svg>'
+  };
+  var SC = [
+    { id: "bank", ch: "Звонок", icon: "call", title: "«Служба безопасности банка»",
+      caller: "+7 (800) 555-…  «Банк»", lines: [
+        "Здравствуйте, Анна Петровна! Вас беспокоит служба безопасности вашего банка.",
+        "С вашей карты сейчас пытаются перевести 48 000 рублей. Чтобы отменить операцию, продиктуйте код, который пришёл вам в СМС."],
+      q: "Что вы сделаете?",
+      opts: [
+        { t: "Продиктую код — надо же спасти деньги", ok: false },
+        { t: "Спрошу имя и должность сотрудника, а потом назову код", ok: false },
+        { t: "Положу трубку и сама позвоню в банк по номеру на обороте карты", ok: true }],
+      why: "Настоящий банк никогда не просит назвать код из СМС: код — это ваша подпись под операцией. Номер на экране можно подделать, а имя и должность мошенник придумает за секунду. Перезванивать нужно самому, по номеру с карты.",
+      flags: ["Просят код из СМС", "Пугают потерей денег", "Торопят"] },
+    { id: "grandson", ch: "Звонок", icon: "call", title: "«Внук попал в беду»",
+      caller: "Неизвестный номер, 23:40", lines: [
+        "Бабушка, это я... Я попал в аварию, сбил человека. Только маме не говори!",
+        "Сейчас трубку возьмёт следователь. Нужно 300 тысяч, чтобы не заводили дело. За деньгами приедет человек."],
+      q: "Что вы сделаете?",
+      opts: [
+        { t: "Соберу деньги и отдам человеку, который приедет", ok: false },
+        { t: "Спрошу наше семейное кодовое слово и перезвоню внуку на его номер", ok: true },
+        { t: "Переведу деньги на карту, которую назовёт «следователь»", ok: false }],
+      why: "Голос родственника легко изобразить, а сегодня его можно и подделать с помощью нейросети. Плачущий голос, ночное время и просьба «никому не говорить» — приёмы, чтобы вы не успели подумать. Спросите кодовое слово, о котором договорились заранее, и перезвоните родному по его обычному номеру.",
+      flags: ["Давят на чувства", "Просят молчать", "Курьер за деньгами"] },
+    { id: "police", ch: "Звонок", icon: "call", title: "«Полиция: ваши деньги под угрозой»",
+      caller: "«Майор Смирнов, МВД»", lines: [
+        "Гражданин Петров? Против вас возбуждено дело: мошенники оформили кредит на ваше имя.",
+        "Чтобы защитить сбережения, снимите их и переведите на безопасный счёт. Никому об этом не сообщайте — это тайна следствия."],
+      q: "Что вы сделаете?",
+      opts: [
+        { t: "Переведу деньги на безопасный счёт, раз это полиция", ok: false },
+        { t: "Положу трубку: безопасных счетов не бывает", ok: true },
+        { t: "Попрошу прислать удостоверение в мессенджер и тогда переведу", ok: false }],
+      why: "Безопасных счетов не существует. Полиция, ФСБ и Центральный банк не просят переводить, снимать или хранить деньги и не ведут дела по телефону или в мессенджере. Фото удостоверения подделать проще всего.",
+      flags: ["«Безопасный счёт»", "«Тайна следствия»", "Пугают уголовным делом"] },
+    { id: "courier", ch: "Звонок", icon: "call", title: "«Курьер с доставкой»",
+      caller: "+7 (9xx) …  «Доставка»", lines: [
+        "Добрый день! Вам заказали доставку цветов. Чтобы курьер привёз букет, назовите код из СМС для подтверждения адреса."],
+      q: "Что вы сделаете?",
+      opts: [
+        { t: "Назову код — это же просто доставка", ok: false },
+        { t: "Скажу, что ничего не жду, и не буду называть код", ok: true },
+        { t: "Назову код, а потом проверю у родных, кто заказал цветы", ok: false }],
+      why: "Код из СМС может открывать вход в Госуслуги, банк или почту. После этого мошенники звонят снова — уже «из банка» или «полиции» — и говорят, что ваш аккаунт взломан. Никакой курьер не нуждается в коде из СМС.",
+      flags: ["Просят код из СМС", "Неожиданный звонок"] },
+    { id: "boss", ch: "Сообщение", icon: "msg", title: "«Бывший начальник пишет в мессенджере»",
+      caller: "Иван Сергеевич (новый номер)", lines: [
+        "Здравствуйте! Это Иван Сергеевич, помните меня? Это мой новый номер.",
+        "Вам сейчас позвонит сотрудник из министерства по поводу проверки. Пожалуйста, сделайте всё, что он скажет, это очень важно."],
+      q: "Что вы сделаете?",
+      opts: [
+        { t: "Буду ждать звонка и сделаю всё, что скажут", ok: false },
+        { t: "Позвоню Ивану Сергеевичу по старому номеру и уточню", ok: true },
+        { t: "Отвечу на сообщение и спрошу, что за проверка", ok: false }],
+      why: "Фото и имя в мессенджере можно взять из открытых страниц. «Новый номер» и просьба «сделать всё, что скажут» — подготовка к следующему звонку мошенника. Проверить можно только одним способом: позвонить человеку по номеру, который у вас уже был.",
+      flags: ["Новый номер знакомого", "Готовят к звонку"] },
+    { id: "pension", ch: "СМС", icon: "msg", title: "«Перерасчёт пенсии»",
+      caller: "СМС от «SocFond»", lines: [
+        "Вам положена компенсация 18 400 руб. за перерасчёт пенсии. Для получения подтвердите данные по ссылке: socfond-vyplata.ru"],
+      q: "Что вы сделаете?",
+      opts: [
+        { t: "Перейду по ссылке и введу данные карты", ok: false },
+        { t: "Не буду переходить по ссылке, проверю выплаты сама в личном кабинете или в клиентской службе Соцфонда", ok: true },
+        { t: "Позвоню по номеру, который пришлют в ответном сообщении", ok: false }],
+      why: "Соцфонд не присылает ссылок для получения выплат и не просит данные карты. Адрес сайта похож на настоящий, но это подделка. Все выплаты видны на Госуслугах и в клиентской службе — туда и нужно обращаться самостоятельно.",
+      flags: ["Обещают деньги", "Ссылка в СМС", "Просят данные карты"] }
+  ];
+
+  var SOSQ = [
+    "Вас просят назвать код из СМС, пароль или данные карты?",
+    "Вас торопят и говорят, что ждать нельзя?",
+    "Просят перевести, снять или передать кому-то деньги?",
+    "Просят никому не рассказывать о разговоре или не класть трубку?",
+    "Звонят «из банка, полиции, ФСБ, Соцфонда» или от имени родственника с незнакомого номера?"
+  ];
+
+  var WORDS1 = ["Ромашка", "Самовар", "Волга", "Пряник", "Скворец", "Баян", "Калина", "Валенок", "Подсолнух", "Рябина", "Утюг", "Кефир"];
+  var WORDS2 = ["на крыше", "в саду", "у реки", "в чемодане", "на балконе", "в шкафу", "под окном", "на даче"];
+
+  var results = store.get("results", {});
+  var plan = store.get("plan", { name: "", phone: "", code: "", bank: "", checks: {} });
+
+  /* ---------- экраны ---------- */
+  function home() {
+    var done = SC.filter(function (s) { return results[s.id] !== undefined; }).length;
+    return '' +
+      '<section style="display:grid;gap:12px">' +
+        '<h1 data-say>Не спешите. Сначала — пауза.</h1>' +
+        '<p class="lead" data-say>Мошенники звонят и торопят, чтобы вы не успели подумать. Здесь можно потренироваться распознавать обман, договориться с родными о защите и быстро проверить подозрительный звонок.</p>' +
+      '</section>' +
+      '<button class="sos" type="button" data-go="sos"><strong>Мне сейчас звонят или пишут</strong><span>5 вопросов — и вы будете знать, что делать</span></button>' +
+      '<div class="tiles">' +
+        tile("trainer", "Тренировка", "Тренажёр звонков", "6 настоящих схем обмана. Пройдено: " + done + " из " + SC.length) +
+        tile("plan", "Вместе с семьёй", "Семейный план", "Кодовое слово, телефон близкого и памятка на холодильник") +
+        tile("rules", "Коротко", "Пять правил", "И что делать, если деньги уже перевели") +
+        tile("family", "Для родных и соцработников", "Как помочь близкому", "Как пройти тренажёр вместе за 20 минут") +
+      '</div>';
+  }
+  function tile(go, tag, title, text) {
+    return '<button class="tile" type="button" data-go="' + go + '"><span class="tag">' + tag + '</span><b>' + title + '</b><span>' + text + '</span></button>';
+  }
+
+  var sosState = { i: 0, yes: 0 };
+  function sos() {
+    if (sosState.i < SOSQ.length) {
+      var bars = SOSQ.map(function (_, k) { return '<i class="' + (k < sosState.i ? "on" : "") + '"></i>'; }).join("");
+      return back() +
+        '<section class="panel q">' +
+          '<div class="progress" aria-hidden="true">' + bars + '</div>' +
+          '<p class="note">Вопрос ' + (sosState.i + 1) + ' из ' + SOSQ.length + '. Если вы ещё на линии — можно положить трубку прямо сейчас, это не грубо.</p>' +
+          '<p class="q-text" data-say>' + SOSQ[sosState.i] + '</p>' +
+          '<div class="yn"><button class="yes" type="button" data-ans="1">Да</button><button class="no" type="button" data-ans="0">Нет</button></div>' +
+        '</section>';
+    }
+    var stop = sosState.yes > 0;
+    var who = plan.name && plan.phone ? '<div class="phone-box"><span>' + esc(plan.name) + ':</span><span class="num">' + esc(plan.phone) + '</span><a href="tel:' + esc(plan.phone.replace(/[^\d+]/g, "")) + '">позвонить</a></div>'
+      : '<p class="note">Совет: заполните «Семейный план» — тогда здесь будет номер вашего близкого человека.</p>';
+    return back() +
+      '<section class="verdict ' + (stop ? "stop" : "calm") + '">' +
+        (stop
+          ? '<h2 data-say>Это почти наверняка мошенники</h2><p data-say>Вы ответили «да» на ' + sosState.yes + ' ' + plural(sosState.yes, "вопрос", "вопроса", "вопросов") + '. Так ведут себя только обманщики.</p>' +
+            '<ol class="steps" data-say><li>Положите трубку или не отвечайте на сообщение.</li><li>Не называйте коды и ничего не переводите.</li><li>Позвоните близкому человеку и расскажите о звонке.</li><li>Если звонили «из банка» — сами позвоните в банк по номеру на обороте карты.</li></ol>'
+          : '<h2 data-say>Тревожных признаков нет</h2><p data-say>Всё равно не называйте коды из СМС. Если сомневаетесь — закончите разговор и сами перезвоните в организацию по официальному номеру.</p>') +
+        who +
+        '<div class="row"><button class="big-btn" type="button" data-go="sos-reset">Проверить другой звонок</button><button class="big-btn ghost" type="button" data-go="home">На главную</button></div>' +
+      '</section>';
+  }
+  function plural(n, a, b, c) { var m = n % 10, h = n % 100; if (m === 1 && h !== 11) return a; if (m >= 2 && m <= 4 && (h < 10 || h >= 20)) return b; return c; }
+
+  function trainer() {
+    var done = SC.filter(function (s) { return results[s.id] !== undefined; });
+    var right = done.filter(function (s) { return results[s.id] === true; }).length;
+    var list = SC.map(function (s) {
+      var r = results[s.id];
+      var badge = r === undefined ? '<span class="badge">не пройден</span>' : (r ? '<span class="badge ok">распознал(а)</span>' : '<span class="badge bad">повторить</span>');
+      return '<button class="scn" type="button" data-scn="' + s.id + '"><span class="ico">' + ICON[s.icon] + '</span><span><span class="ch">' + s.ch + '</span><br><b>' + s.title + '</b></span>' + badge + '</button>';
+    }).join("");
+    return back() +
+      '<section style="display:grid;gap:10px"><h2 data-say>Тренажёр звонков</h2><p class="lead" data-say>Выберите ситуацию. Вы увидите, что говорит мошенник, и выберете, как поступить. Ошибаться здесь не страшно — для этого тренировка и нужна.</p></section>' +
+      (done.length ? '<div class="score"><b>' + right + ' / ' + SC.length + '</b><span>ситуаций распознано верно</span></div>' : '') +
+      '<div class="scn-list">' + list + '</div>' +
+      (done.length ? '<button class="big-btn ghost" type="button" data-go="reset-trainer">Начать тренировку заново</button>' : '');
+  }
+
+  var current = null, picked = null;
+  function scenario() {
+    var s = SC.filter(function (x) { return x.id === current; })[0];
+    var bubbles = s.lines.map(function (l) { return '<p class="bubble" data-say>' + l + '</p>'; }).join("");
+    var opts = s.opts.map(function (o, k) {
+      var cls = picked === null ? "" : (o.ok ? " right" : (picked === k ? " wrong" : ""));
+      return '<button class="choice' + cls + '" type="button" data-pick="' + k + '"' + (picked !== null ? " disabled" : "") + '><span class="letter">' + "АБВ"[k] + '</span><span data-say>' + o.t + '</span></button>';
+    }).join("");
+    var fb = "";
+    if (picked !== null) {
+      var ok = s.opts[picked].ok;
+      fb = '<section class="feedback ' + (ok ? "ok" : "bad") + '"><h3 data-say>' + (ok ? "Верно! Это мошенники." : "Это была ловушка.") + '</h3><p data-say>' + s.why + '</p>' +
+        '<div class="flags">' + s.flags.map(function (f) { return '<span class="flag">' + f + '</span>'; }).join("") + '</div></section>' +
+        '<div class="row"><button class="big-btn" type="button" data-go="next">Следующая ситуация</button><button class="big-btn ghost" type="button" data-go="trainer">К списку</button></div>';
+    }
+    return '<button class="back" type="button" data-go="trainer">← К списку ситуаций</button>' +
+      '<section class="phone" aria-label="Имитация разговора"><div class="phone-top"><span class="caller">' + s.caller + '</span><span>' + s.ch + '</span></div>' + bubbles + '</section>' +
+      '<p class="q-text" data-say>' + s.q + '</p><div class="choices">' + opts + '</div>' + fb;
+  }
+
+  function planView() {
+    var checks = [
+      ["code", "Договорились о кодовом слове", "Его знают только члены семьи и не пишут в мессенджерах."],
+      ["self", "Установили самозапрет на кредиты", "Бесплатно, на Госуслугах или в МФЦ. Действует с 1 марта 2025 года."],
+      ["second", "Назначили доверенное лицо в банке («вторая рука»)", "Близкий подтверждает или отклоняет подозрительные переводы. Услуга банков с 1 сентября 2025 года."],
+      ["spam", "Включили защиту от спам-звонков у оператора", "Многие операторы блокируют или подписывают подозрительные номера."]
+    ];
+    var c = checks.map(function (x) {
+      return '<label class="check"><input type="checkbox" id="chk-' + x[0] + '" data-check="' + x[0] + '"' + (plan.checks[x[0]] ? " checked" : "") + '><span><b>' + x[1] + '</b><small>' + x[2] + '</small></span></label>';
+    }).join("");
+    var doneN = checks.filter(function (x) { return plan.checks[x[0]]; }).length;
+    return back() +
+      '<section style="display:grid;gap:10px"><h2 data-say>Семейный план защиты</h2><p class="lead" data-say>Заполните вместе с близким человеком. Данные сохраняются только на этом устройстве и никуда не отправляются.</p></section>' +
+      '<form class="panel" id="planForm" autocomplete="off">' +
+        field("pname", "Кому звоню, если сомневаюсь", "Например: дочь Марина", plan.name) +
+        field("pphone", "Телефон этого человека", "+7 900 000-00-00", plan.phone) +
+        '<div class="field"><label for="pcode">Семейное кодовое слово</label><div class="codegen"><input id="pcode" value="' + esc(plan.code) + '" placeholder="Придумайте или нажмите «Подобрать»"><button class="big-btn ghost" type="button" data-go="gen">Подобрать</button></div><small>Его спрашивают, если «родственник» звонит с чужого номера и просит денег.</small></div>' +
+        field("pbank", "Телефон моего банка", "Перепишите с обратной стороны карты", plan.bank) +
+      '</form>' +
+      '<section class="panel"><h3 data-say>Чек-лист семьи: выполнено ' + doneN + ' из ' + checks.length + '</h3><div class="checks">' + c + '</div></section>' +
+      '<section style="display:grid;gap:10px"><h3>Памятка на холодильник</h3>' + fridge() + '<p class="note">Сделайте снимок экрана и распечатайте памятку или перепишите её от руки.</p></section>';
+  }
+  function field(id, label, ph, val) {
+    return '<div class="field"><label for="' + id + '">' + label + '</label><input id="' + id + '" value="' + esc(val || "") + '" placeholder="' + ph + '"></div>';
+  }
+  function fridge() {
+    function v(x) { return x ? esc(x) : "—"; }
+    return '<div class="fridge" id="fridge"><h3>Если звонят и торопят — я кладу трубку</h3><dl>' +
+      '<dt>Звоню</dt><dd>' + v(plan.name) + '</dd><dt>Телефон</dt><dd>' + v(plan.phone) + '</dd>' +
+      '<dt>Мой банк</dt><dd>' + v(plan.bank) + '</dd><dt>Кодовое слово</dt><dd>знаем только мы</dd></dl>' +
+      '<p class="stopline">Код из СМС не называю никому. Безопасных счетов не бывает. Полиция 102, единый номер 112.</p></div>';
+  }
+
+  function rules() {
+    var r = [
+      ["Код из СМС не называю никому", "Ни банку, ни полиции, ни курьеру. Код — это ваша подпись."],
+      ["Безопасных счетов не бывает", "Тот, кто просит перевести деньги «на защищённый счёт», — мошенник."],
+      ["Банк, полиция и Соцфонд не просят денег по телефону", "И не ведут дела через мессенджеры."],
+      ["Если торопят — кладу трубку", "Спешка — главный инструмент обмана. Любой честный вопрос подождёт 10 минут."],
+      ["Перезваниваю сам", "В банк — по номеру с карты. Родным — по их обычному номеру. Спрашиваю кодовое слово."]
+    ].map(function (x) { return '<div class="rule"><span><b data-say>' + x[0] + '</b><span data-say>' + x[1] + '</span></span></div>'; }).join("");
+    return back() +
+      '<h2 data-say>Пять правил</h2><div class="rules">' + r + '</div>' +
+      '<section class="alarm"><h2 data-say>Если деньги уже перевели</h2><ol class="steps" data-say>' +
+        '<li>Сразу позвоните в свой банк по номеру на обороте карты и попросите заблокировать карту и операцию.</li>' +
+        '<li>Обратитесь в полицию: 102 с мобильного телефона или единый номер 112. Сохраните номер, с которого звонили, и переписку.</li>' +
+        '<li>Если вы называли код от Госуслуг — смените пароль и проверьте, установлен ли самозапрет на кредиты.</li>' +
+        '<li>Расскажите родным. Стыдиться нечего: мошенники — профессионалы, и обманывают людей любого возраста.</li>' +
+      '</ol></section>';
+  }
+
+  function family() {
+    return back() +
+      '<section style="display:grid;gap:10px"><h2 data-say>Как помочь близкому</h2><p class="lead" data-say>Цель — не напугать, а дать уверенность. Страх перед любым звонком тоже вредит: человек перестаёт отвечать даже родным.</p></section>' +
+      '<section class="panel"><h3>Занятие на 20 минут</h3><ol class="steps">' +
+        '<li><b>5 минут.</b> Пройдите вместе две ситуации тренажёра. Не подсказывайте — обсудите ответ после.</li>' +
+        '<li><b>5 минут.</b> Заполните семейный план: ваш телефон и кодовое слово.</li>' +
+        '<li><b>5 минут.</b> Отметьте пункты чек-листа. Самозапрет на кредиты можно поставить на Госуслугах прямо сейчас.</li>' +
+        '<li><b>5 минут.</b> Сделайте снимок памятки, распечатайте и повесьте рядом с телефоном.</li>' +
+      '</ol><p class="note">Повторяйте тренировку раз в месяц: мошенники быстро меняют сценарии.</p></section>' +
+      '<section class="panel"><h3>Для соцработников и волонтёров</h3><p>Тренажёр подходит для групповых занятий в центрах социального обслуживания и клубах «серебряного» возраста: откройте его на экране, зачитывайте ситуации вслух (кнопка «Слушать»), а участники голосуют карточками «А», «Б», «В».</p></section>';
+  }
+
+  function back() { return '<button class="back" type="button" data-go="home">← На главную</button>'; }
+
+  /* ---------- маршрутизация ---------- */
+  var VIEWS = { home: home, sos: sos, trainer: trainer, scenario: scenario, plan: planView, rules: rules, family: family };
+  var view = "home";
+  function render(focusTop) {
+    stopSpeak();
+    app.innerHTML = VIEWS[view]();
+    if (focusTop) window.scrollTo(0, 0);
+  }
+  function go(v) {
+    if (v === "sos-reset") { sosState = { i: 0, yes: 0 }; v = "sos"; }
+    if (v === "sos" && view !== "sos") sosState = { i: 0, yes: 0 };
+    if (v === "reset-trainer") { results = {}; store.set("results", results); v = "trainer"; }
+    if (v === "next") {
+      var idx = SC.map(function (s) { return s.id; }).indexOf(current);
+      var nxt = SC.slice(idx + 1).concat(SC.slice(0, idx)).filter(function (s) { return results[s.id] === undefined; })[0] || SC[(idx + 1) % SC.length];
+      current = nxt.id; picked = null; v = "scenario";
+    }
+    if (v === "gen") {
+      plan.code = WORDS1[Math.floor(Math.random() * WORDS1.length)] + " " + WORDS2[Math.floor(Math.random() * WORDS2.length)];
+      store.set("plan", plan); render(false); return;
+    }
+    view = v;
+    try { if (["home", "sos", "trainer", "plan", "rules", "family"].indexOf(v) >= 0) history.replaceState(null, "", "#" + v); } catch (e) {}
+    render(true);
+  }
+  app.addEventListener("click", function (e) {
+    var t = e.target.closest("[data-go],[data-ans],[data-scn],[data-pick]");
+    if (!t) return;
+    if (t.dataset.go) { go(t.dataset.go); return; }
+    if (t.dataset.ans !== undefined) { sosState.yes += +t.dataset.ans; sosState.i++; render(false); return; }
+    if (t.dataset.scn) { current = t.dataset.scn; picked = null; go("scenario"); return; }
+    if (t.dataset.pick !== undefined && picked === null) {
+      picked = +t.dataset.pick;
+      var s = SC.filter(function (x) { return x.id === current; })[0];
+      results[s.id] = s.opts[picked].ok; store.set("results", results); render(false);
+    }
+  });
+  document.querySelector(".brand").addEventListener("click", function (e) { e.preventDefault(); go("home"); });
+  app.addEventListener("input", function (e) {
+    var map = { pname: "name", pphone: "phone", pcode: "code", pbank: "bank" };
+    if (map[e.target.id]) {
+      plan[map[e.target.id]] = e.target.value; store.set("plan", plan);
+      var f = document.getElementById("fridge"); if (f) f.outerHTML = fridge();
+    }
+  });
+  app.addEventListener("change", function (e) {
+    if (e.target.dataset.check) { plan.checks[e.target.dataset.check] = e.target.checked; store.set("plan", plan); render(false); }
+  });
+  app.addEventListener("submit", function (e) { e.preventDefault(); });
+  function fromHash() {
+    var h = (location.hash || "").replace("#", "");
+    if (VIEWS[h] && h !== "scenario") { view = h; } else { view = "home"; }
+    if (view === "sos") sosState = { i: 0, yes: 0 };
+    render(false);
+  }
+  window.addEventListener("hashchange", fromHash);
+  fromHash();
+})();
+</script>
+
+</body></html>
